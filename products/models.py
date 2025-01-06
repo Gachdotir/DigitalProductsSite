@@ -5,11 +5,14 @@ from django.utils.translation import gettext_lazy as _
 class Category(models.Model):
     parent = models.ForeignKey('self', verbose_name=_('parent'), null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(_('title'), max_length=50)
-    description = models.TextField(_('description'))
-    avatar = models.ImageField(_('avatar'), upload_to='categories/')
+    description = models.TextField(_('description'), blank=True)
+    avatar = models.ImageField(_('avatar'), upload_to='categories/', blank=True)
     is_enabled = models.BooleanField(_('is enabled'), default=True)
     created_time = models.DateTimeField(_('created time'), auto_now_add=True)
     updated_time = models.DateTimeField(_('updated time'), auto_now=True)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         db_table = 'categories'
@@ -19,8 +22,8 @@ class Category(models.Model):
 
 class Product(models.Model):
     title = models.CharField(_('title'), max_length=50)
-    description = models.TextField(_('description'))
-    avatar = models.ImageField(_('avatar'), upload_to='categories/')
+    description = models.TextField(_('description'), blank=True)
+    avatar = models.ImageField(_('avatar'), upload_to='products/', blank=True)
     is_enabled = models.BooleanField(_('is enabled'), default=True)
     categories = models.ManyToManyField('Category', verbose_name=_('categories'), blank=True)
     created_time = models.DateTimeField(_('created time'), auto_now_add=True)

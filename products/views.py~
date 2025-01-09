@@ -6,7 +6,7 @@ from .serializers import CategorySerializer, ProductSerializer, FileSerializer
 from .models import Category, Product, File
 
 
-class ProductListView(APIView):
+class ProductView(APIView):
     def get(self, request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)

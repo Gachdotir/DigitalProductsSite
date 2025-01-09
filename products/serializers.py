@@ -10,9 +10,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class FileSerializer(serializers.ModelSerializer):
+    file_type = serializers.SerializerMethodField()
+
     class Meta:
         model = File
         fields = ['title', 'file']
+
+    def get_type_file(self, obj):
+        return obj.get_file_type_display()
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):

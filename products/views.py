@@ -43,16 +43,16 @@ class ProductDetailView(APIView):
 
 
 class FileListView(APIView):
-    def get(self, request, product_pk):
-        files = File.objects.filter(product_id=product_pk)
+    def get(self, request, product_id):
+        files = File.objects.filter(product_id=product_id)
         serializer = FileSerializer(files, many=True, context={'request': request})
         return Response(serializer.data)
 
 
 class FileDetailView(APIView):
-    def get(self, request, pk, product_pk):
+    def get(self, request, pk, product_id):
         try:
-            file = File.objects.get(pk=pk, product_id=product_pk)
+            file = File.objects.get(pk=pk, product_id=product_id)
         except file.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = FileSerializer(file, context={'request': request})

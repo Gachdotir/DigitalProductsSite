@@ -10,7 +10,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, username, phone_number,email, password, is_staff, is_superuser, **extra_fields):
+    def _create_user(self, username, phone_number, email, password, is_staff, is_superuser, **extra_fields):
         now = timezone.now()
         if not username:
             raise ValueError('The given username must be set')
@@ -19,6 +19,7 @@ class UserManager(BaseUserManager):
                           username=username, is_staff=is_staff, is_active=True,
                           is_superuser=is_superuser, date_joined=now, **extra_fields)
 
+        
         if password:
             user.set_password(password)
         else:
@@ -38,7 +39,15 @@ class UserManager(BaseUserManager):
                 return self._create_user(username, phone_number, email, password, **extra_fields)
 
     def create_superuser(self, username, phone_number, email, password, **extra_fields):
-        return self._create_user(username, phone_number, email, password, True, True, **extra_fields)
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if not phone_number:
+            raise ValueError("The phone number must be set.")
+        if not email:
+            raise ValueError("The email must be set.")
+
+        return self._create_user(username, phone_number, email, password, **extra_fields)
 
     def get_by_phone_number(self, phone_number):
         return self.get(**{'phone_number': phone_number})

@@ -75,3 +75,28 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = 'users'
         verbose_name = _('user')
         verbose_name_plural = _('users')
+
+
+class Device(models.Model):
+    WEB = 1
+    ANDROID = 2
+    IOS = 3
+    DEVICE_TYPE_CHOICES = (
+        (WEB, 'WEB'),
+        (ANDROID, 'ANDROID'),
+        (IOS, 'IOS'),
+    )
+
+    user = models.ForeignKey(User, related_name='devices', on_delete=models.CASCADE)
+    device_uuid = models.UUIDField(_('device UUID'), null=True)
+    last_login = models.DateTimeField(_('last login'), null=True)
+    device_type = models.PositiveSmallIntegerField(choices=DEVICE_TYPE_CHOICES, default=WEB)
+    device_os = models.CharField(_('device os'), max_length=20, null=True)
+    device_model = models.CharField(_('device model'), max_length=20, null=True)
+    created_time = models.DateTimeField(auto_now_add=True)
+
+    class Mete:
+        db_table = 'user_devices'
+        verbose_name = _('device')
+        verbose_name_plural = _('devices')
+        unique_together = ('user', 'device_uuid')
